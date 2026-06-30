@@ -322,6 +322,38 @@ h2.section-title .accent{ color:var(--amber); }
 .flux-note{ font-family:var(--mono); font-size:.8rem; color:var(--faint); margin:1.2rem 0 0; line-height:1.6; }
 .flux-note b{ color:var(--amber); font-weight:700; }
 
+/* post-training curve (native line charts) */
+.curve{ margin:clamp(2.6rem,5vw,3.6rem) 0 0; }
+.curve-lab{ font-family:var(--mono); font-size:.7rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin:0 0 1rem; }
+.curve-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(1rem,2vw,1.4rem); }
+@media (max-width:760px){ .curve-grid{ grid-template-columns:1fr; } }
+.curve-card{ background:var(--ink-2); border:1px solid var(--line); border-radius:16px; padding:1.2rem 1.3rem 1.1rem; }
+.curve-head{ display:flex; align-items:baseline; justify-content:space-between; gap:.8rem; margin-bottom:.7rem; flex-wrap:wrap; }
+.curve-head .m{ font-family:var(--disp); font-weight:600; font-size:1.08rem; letter-spacing:-.01em; }
+.curve-head .v{ font-family:var(--mono); font-size:.74rem; color:var(--dim); white-space:nowrap; }
+.curve-card.ge .curve-head .v b{ color:var(--amber); font-weight:700; }
+.curve-card.ps .curve-head .v b{ color:var(--blue); font-weight:700; }
+.chart-svg{ width:100%; height:auto; display:block; overflow:visible; }
+.chart-svg .axis{ stroke:var(--line-2); stroke-width:1; }
+.chart-svg .grid{ stroke:var(--line); stroke-width:1; }
+.chart-svg .tick{ fill:var(--faint); font-family:var(--mono); font-size:9px; }
+.chart-svg .axlabel{ fill:var(--faint); font-family:var(--mono); font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; }
+.chart-svg .line{ fill:none; stroke-width:2.4; stroke-linejoin:round; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; }
+.chart-svg .teacher{ fill:none; stroke-dasharray:4 4; stroke-width:1.4; }
+.chart-svg .teacher-lab{ font-family:var(--mono); font-size:8.5px; }
+.chart-svg .dot{ stroke:var(--ink-2); stroke-width:1.5; opacity:0; }
+.chart-svg .ring{ fill:none; stroke-width:1.5; opacity:0; }
+.chart-svg .pt-lab{ font-family:var(--mono); font-size:9px; fill:var(--dim); opacity:0; }
+.curve-card.ge .line{ stroke:var(--amber); } .curve-card.ge .dot{ fill:var(--amber); } .curve-card.ge .ring{ stroke:var(--amber); }
+.curve-card.ge .teacher{ stroke:color-mix(in srgb, var(--amber) 50%, var(--faint)); } .curve-card.ge .teacher-lab{ fill:color-mix(in srgb, var(--amber) 65%, var(--dim)); }
+.curve-card.ps .line{ stroke:var(--blue); } .curve-card.ps .dot{ fill:var(--blue); } .curve-card.ps .ring{ stroke:var(--blue); }
+.curve-card.ps .teacher{ stroke:color-mix(in srgb, var(--blue) 50%, var(--faint)); } .curve-card.ps .teacher-lab{ fill:color-mix(in srgb, var(--blue) 65%, var(--dim)); }
+.curve.in .chart-svg .line{ stroke-dashoffset:0; transition:stroke-dashoffset 1.6s cubic-bezier(.45,0,.25,1); }
+.curve.in .chart-svg .dot, .curve.in .chart-svg .pt-lab{ opacity:1; transition:opacity .6s ease 1.15s; }
+.curve.in .chart-svg .ring{ opacity:.5; transition:opacity .6s ease 1.15s; }
+.curve-cap{ font-family:var(--mono); font-size:.74rem; color:var(--faint); line-height:1.65; margin:1.1rem 0 0; }
+.curve-cap b{ color:var(--dim); font-weight:700; }
+
 /* ============================================================ TEACHER vs 1-STEP */
 .vs-list{ display:flex; flex-direction:column; gap:0; margin-top:1rem; }
 .vs{ border-top:1px solid var(--line); padding-top:clamp(1.3rem,2.6vw,1.9rem); padding-bottom:clamp(1.3rem,2.6vw,1.9rem); }
@@ -484,6 +516,87 @@ h2.section-title .accent{ color:var(--amber); }
         <div class="num" data-count="90" data-dec="0">90<span class="u">h</span></div>
         <div class="lab">H200 GPU-hours to post-train four-step FLUX.2 into a single step.</div>
       </div>
+    </div>
+
+    <!-- post-training curve (opens the page) -->
+    <div class="curve reveal">
+      <div class="curve-lab">Post-training &middot; our 1-step vs the 4-step FLUX.2 teacher</div>
+      <div class="curve-grid">
+
+        <div class="curve-card ge">
+          <div class="curve-head"><span class="m">GenEval</span><span class="v">keeper <b>0.826</b> &middot; 4-step 0.794</span></div>
+          <svg class="chart-svg" viewBox="0 0 440 300" role="img" aria-label="GenEval over post-training GPU-hours: rising from 0.474 untrained, past the four-step teacher 0.794, to 0.826 at the keeper (90 GPU-hours).">
+            <line class="grid" x1="48" y1="230.5" x2="422" y2="230.5"/>
+            <line class="grid" x1="48" y1="171.5" x2="422" y2="171.5"/>
+            <line class="grid" x1="48" y1="112.5" x2="422" y2="112.5"/>
+            <line class="axis" x1="48" y1="24" x2="48" y2="260"/>
+            <line class="axis" x1="48" y1="260" x2="422" y2="260"/>
+            <text class="tick" x="43" y="233.5" text-anchor="end">0.5</text>
+            <text class="tick" x="43" y="174.5" text-anchor="end">0.6</text>
+            <text class="tick" x="43" y="115.5" text-anchor="end">0.7</text>
+            <text class="tick" x="43" y="56.5" text-anchor="end">0.8</text>
+            <text class="tick" x="48" y="274" text-anchor="middle">0</text>
+            <text class="tick" x="172.7" y="274" text-anchor="middle">30</text>
+            <text class="tick" x="297.3" y="274" text-anchor="middle">60</text>
+            <text class="tick" x="422" y="274" text-anchor="middle">90</text>
+            <text class="axlabel" x="235" y="292" text-anchor="middle">GPU-hour</text>
+            <line class="teacher" x1="48" y1="57" x2="422" y2="57"/>
+            <text class="teacher-lab" x="420" y="68" text-anchor="end">4-step &middot; 0.794</text>
+            <path class="line" pathLength="1" d="M48,245.8 L89.6,55.3 L131.1,53.7 L172.7,45.8 L214.2,45.1 L255.8,43.9 L297.3,43.3 L338.9,47.2 L380.4,42.8 L422,38.3"/>
+            <circle class="dot" cx="48" cy="245.8" r="3"/>
+            <circle class="dot" cx="89.6" cy="55.3" r="3"/>
+            <circle class="dot" cx="131.1" cy="53.7" r="3"/>
+            <circle class="dot" cx="172.7" cy="45.8" r="3"/>
+            <circle class="dot" cx="214.2" cy="45.1" r="3"/>
+            <circle class="dot" cx="255.8" cy="43.9" r="3"/>
+            <circle class="dot" cx="297.3" cy="43.3" r="3"/>
+            <circle class="dot" cx="338.9" cy="47.2" r="3"/>
+            <circle class="dot" cx="380.4" cy="42.8" r="3"/>
+            <circle class="ring" cx="422" cy="38.3" r="7.5"/>
+            <circle class="dot" cx="422" cy="38.3" r="4.5"/>
+            <text class="pt-lab" x="414" y="31" text-anchor="end">keeper</text>
+            <text class="pt-lab" x="55" y="251" text-anchor="start">untrained</text>
+          </svg>
+        </div>
+
+        <div class="curve-card ps">
+          <div class="curve-head"><span class="m">PickScore</span><span class="v">keeper <b>22.76</b> &middot; 4-step 22.58</span></div>
+          <svg class="chart-svg" viewBox="0 0 440 300" role="img" aria-label="PickScore over post-training GPU-hours: rising from 19.95 untrained, past the four-step teacher 22.58 by about 30 GPU-hours, to 22.76 at the keeper (90 GPU-hours).">
+            <line class="grid" x1="48" y1="226.3" x2="422" y2="226.3"/>
+            <line class="grid" x1="48" y1="158.9" x2="422" y2="158.9"/>
+            <line class="grid" x1="48" y1="91.4" x2="422" y2="91.4"/>
+            <line class="axis" x1="48" y1="24" x2="48" y2="260"/>
+            <line class="axis" x1="48" y1="260" x2="422" y2="260"/>
+            <text class="tick" x="43" y="229.3" text-anchor="end">20</text>
+            <text class="tick" x="43" y="161.9" text-anchor="end">21</text>
+            <text class="tick" x="43" y="94.4" text-anchor="end">22</text>
+            <text class="tick" x="43" y="27" text-anchor="end">23</text>
+            <text class="tick" x="48" y="274" text-anchor="middle">0</text>
+            <text class="tick" x="172.7" y="274" text-anchor="middle">30</text>
+            <text class="tick" x="297.3" y="274" text-anchor="middle">60</text>
+            <text class="tick" x="422" y="274" text-anchor="middle">90</text>
+            <text class="axlabel" x="235" y="292" text-anchor="middle">GPU-hour</text>
+            <line class="teacher" x1="48" y1="52.3" x2="422" y2="52.3"/>
+            <text class="teacher-lab" x="420" y="63" text-anchor="end">4-step &middot; 22.58</text>
+            <path class="line" pathLength="1" d="M48,229.7 L89.6,78.2 L131.1,60.2 L172.7,50.5 L214.2,48.3 L255.8,43.7 L297.3,43.9 L338.9,43.9 L380.4,41.3 L422,40.5"/>
+            <circle class="dot" cx="48" cy="229.7" r="3"/>
+            <circle class="dot" cx="89.6" cy="78.2" r="3"/>
+            <circle class="dot" cx="131.1" cy="60.2" r="3"/>
+            <circle class="dot" cx="172.7" cy="50.5" r="3"/>
+            <circle class="dot" cx="214.2" cy="48.3" r="3"/>
+            <circle class="dot" cx="255.8" cy="43.7" r="3"/>
+            <circle class="dot" cx="297.3" cy="43.9" r="3"/>
+            <circle class="dot" cx="338.9" cy="43.9" r="3"/>
+            <circle class="dot" cx="380.4" cy="41.3" r="3"/>
+            <circle class="ring" cx="422" cy="40.5" r="7.5"/>
+            <circle class="dot" cx="422" cy="40.5" r="4.5"/>
+            <text class="pt-lab" x="414" y="33" text-anchor="end">keeper</text>
+            <text class="pt-lab" x="55" y="235" text-anchor="start">untrained</text>
+          </svg>
+        </div>
+
+      </div>
+      <p class="curve-cap">Each dot is a checkpoint over 90 H200 GPU-hours; the dashed line is the four-step FLUX.2 teacher. Our one step clears it on GenEval within ~10 GPU-hours and on PickScore by ~30, reaching <b>0.826</b> and <b>22.76</b> at the keeper.</p>
     </div>
   </div>
 

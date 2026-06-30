@@ -1,0 +1,290 @@
+[
+  {
+    "n": 1,
+    "theme": "epic_fantasy",
+    "prompt": "A lone dragon glides over jagged misty peaks at dawn, golden god rays piercing fog, vast silhouette",
+    "student_ps": 22.64
+  },
+  {
+    "n": 2,
+    "theme": "epic_fantasy",
+    "prompt": "A floating castle adrift in glowing cloudbanks, backlit by soft amber sunrise, sweeping cinematic vista",
+    "student_ps": 22.26
+  },
+  {
+    "n": 3,
+    "theme": "epic_fantasy",
+    "prompt": "A floating island fortress in violet storm clouds, lightning glow behind, single hero spire, vast moody atmosphere",
+    "student_ps": 22.39
+  },
+  {
+    "n": 4,
+    "theme": "epic_fantasy",
+    "prompt": "Golden-hour valley of waterfalls in mist, lone soaring eagle, warm volumetric light, cinematic wide vista",
+    "student_ps": 21.98
+  },
+  {
+    "n": 5,
+    "theme": "sci_fi_worlds",
+    "prompt": "Colossal starship descending over neon megacity, glowing teal haze, lone tower silhouette, cinematic backlight",
+    "student_ps": 22.53
+  },
+  {
+    "n": 6,
+    "theme": "sci_fi_worlds",
+    "prompt": "Alien desert under twin suns, golden dust haze, lone wanderer silhouette, vast dunes, warm horizon glow",
+    "student_ps": 21.99
+  },
+  {
+    "n": 7,
+    "theme": "sci_fi_worlds",
+    "prompt": "Towering mech silhouette in rainy neon city, magenta and cyan glow, volumetric fog, moody cinematic backlight",
+    "student_ps": 24.26
+  },
+  {
+    "n": 8,
+    "theme": "sci_fi_worlds",
+    "prompt": "Floating crystal city above orange cloud sea, twin moons rising, golden god rays, lone airship silhouette",
+    "student_ps": 22.3
+  },
+  {
+    "n": 9,
+    "theme": "space_and_cosmos",
+    "prompt": "Lone astronaut silhouette drifting in vast violet nebula, glowing rim light, teal and magenta haze",
+    "student_ps": 23.37
+  },
+  {
+    "n": 10,
+    "theme": "space_and_cosmos",
+    "prompt": "Giant ringed gas giant rising over barren moon horizon, golden backlight, lone figure for scale, wide vista",
+    "student_ps": 23.02
+  },
+  {
+    "n": 11,
+    "theme": "space_and_cosmos",
+    "prompt": "Swirling crimson nebula with bright newborn star, volumetric glow, deep cosmic blacks, breathtaking scale",
+    "student_ps": 23.89
+  },
+  {
+    "n": 12,
+    "theme": "space_and_cosmos",
+    "prompt": "Earthrise over lunar surface, glowing blue planet, stark black sky, single explorer silhouette, cinematic grandeur",
+    "student_ps": 23.23
+  },
+  {
+    "n": 13,
+    "theme": "underwater",
+    "prompt": "Lone humpback whale gliding through golden god rays, deep blue haze, drifting silt, vast cinematic silhouette",
+    "student_ps": 21.12
+  },
+  {
+    "n": 14,
+    "theme": "underwater",
+    "prompt": "Glowing bioluminescent reef in teal darkness, electric blue and magenta haze, single radiant anemone hero",
+    "student_ps": 21.69
+  },
+  {
+    "n": 15,
+    "theme": "underwater",
+    "prompt": "Sunken temple ruin in blue-green haze, shafts of light through arches, lone diver silhouette for scale",
+    "student_ps": 21.82
+  },
+  {
+    "n": 16,
+    "theme": "underwater",
+    "prompt": "Giant manta ray soaring through turquoise god rays, glowing surface above, deep indigo abyss, epic scale",
+    "student_ps": 23.41
+  },
+  {
+    "n": 17,
+    "theme": "dramatic_weather",
+    "prompt": "Lightning storm over dark sea, single fishing boat silhouette, electric blue bolts splitting black clouds",
+    "student_ps": 22.43
+  },
+  {
+    "n": 18,
+    "theme": "dramatic_weather",
+    "prompt": "Massive tornado on golden plains at sunset, lone barn silhouette, swirling dust and amber backlight",
+    "student_ps": 21.16
+  },
+  {
+    "n": 19,
+    "theme": "dramatic_weather",
+    "prompt": "Volcanic eruption at night, glowing orange lava fountain, ash plume against black sky, distant ridge silhouette",
+    "student_ps": 21.95
+  },
+  {
+    "n": 20,
+    "theme": "dramatic_weather",
+    "prompt": "Giant rogue wave at dawn, glowing emerald crest, lone surfer silhouette, misty spray and golden backlight",
+    "student_ps": 21.11
+  },
+  {
+    "n": 21,
+    "theme": "epic_hero_shots",
+    "prompt": "Lone warrior silhouette on a clifftop, vast golden sunset, glowing horizon, drifting haze, cinematic backlight",
+    "student_ps": 20.88
+  },
+  {
+    "n": 22,
+    "theme": "epic_hero_shots",
+    "prompt": "Tiny figure at base of colossal waterfall, misty spray, soft god rays, teal depths, towering scale",
+    "student_ps": 22.23
+  },
+  {
+    "n": 23,
+    "theme": "epic_hero_shots",
+    "prompt": "Knight standing in cathedral god rays, volumetric dust, golden shafts, deep shadow, glowing silhouette",
+    "student_ps": 23.2
+  },
+  {
+    "n": 24,
+    "theme": "epic_hero_shots",
+    "prompt": "Samurai silhouette against a blood-red moon, drifting mist, bold backlight, moody crimson sky, cinematic",
+    "student_ps": 22.47
+  },
+  {
+    "n": 25,
+    "theme": "mythical_creatures",
+    "prompt": "A blazing phoenix rising from glowing embers, fiery orange wings spread against dark smoldering sky",
+    "student_ps": 23.8
+  },
+  {
+    "n": 26,
+    "theme": "mythical_creatures",
+    "prompt": "A colossal silhouetted wolf in a raging snowstorm, glowing eyes, cold blue haze and swirling snow",
+    "student_ps": 22.67
+  },
+  {
+    "n": 27,
+    "theme": "mythical_creatures",
+    "prompt": "A massive sea serpent breaching at dusk, dark silhouette against glowing orange horizon, misty spray",
+    "student_ps": 23.04
+  },
+  {
+    "n": 28,
+    "theme": "mythical_creatures",
+    "prompt": "A radiant unicorn in an enchanted forest, soft volumetric light rays, glowing mist, magical teal glow",
+    "student_ps": 21.48
+  },
+  {
+    "n": 29,
+    "theme": "grand_architecture",
+    "prompt": "Colossal jungle temple swallowed in dawn mist, god rays piercing green haze, lone silhouette on stone steps",
+    "student_ps": 22.09
+  },
+  {
+    "n": 30,
+    "theme": "grand_architecture",
+    "prompt": "Ancient ruined colonnade under stormy sky, dramatic backlight, lightning silhouette, moody blue haze, vast scale",
+    "student_ps": 21.55
+  },
+  {
+    "n": 31,
+    "theme": "grand_architecture",
+    "prompt": "Underground cathedral cavern, single shaft of light on ancient pillar, glowing dust, deep teal shadows",
+    "student_ps": 22.94
+  },
+  {
+    "n": 32,
+    "theme": "grand_architecture",
+    "prompt": "Towering pyramid in sandstorm, sun glowing through haze, bold silhouette, warm amber atmosphere, epic vista",
+    "student_ps": 21.9
+  },
+  {
+    "n": 33,
+    "theme": "vehicles_in_motion",
+    "prompt": "Lone red sports car drifting through neon rain, glowing tire smoke, wet reflections, cinematic teal-orange night",
+    "student_ps": 22.03
+  },
+  {
+    "n": 34,
+    "theme": "vehicles_in_motion",
+    "prompt": "Fighter jet bursting through golden clouds at dawn, vapor cone trailing, dramatic backlight, vast cinematic sky",
+    "student_ps": 21.93
+  },
+  {
+    "n": 35,
+    "theme": "vehicles_in_motion",
+    "prompt": "Steam train crossing misty stone viaduct, billowing smoke, volumetric god rays, moody blue valley fog",
+    "student_ps": 22.52
+  },
+  {
+    "n": 36,
+    "theme": "vehicles_in_motion",
+    "prompt": "Rally car airborne over muddy ridge, dirt spray exploding, low golden sun, dramatic silhouette, dust haze",
+    "student_ps": 22.45
+  },
+  {
+    "n": 37,
+    "theme": "cinematic_crowds",
+    "prompt": "Foggy night market, glowing stall lanterns, one cloaked vendor silhouette, warm amber haze, bokeh glow",
+    "student_ps": 22.53
+  },
+  {
+    "n": 38,
+    "theme": "cinematic_crowds",
+    "prompt": "Rain-soaked crowd under neon, one lone figure with umbrella, teal-magenta glow, wet reflections, motion blur",
+    "student_ps": 22.53
+  },
+  {
+    "n": 39,
+    "theme": "cinematic_crowds",
+    "prompt": "Lantern festival at dusk, glowing orbs rising, single child silhouette, golden haze, soft bokeh, dreamy cinematic",
+    "student_ps": 21.47
+  },
+  {
+    "n": 40,
+    "theme": "cinematic_crowds",
+    "prompt": "Bustling train station at dawn, god rays through glass roof, one traveler silhouette, golden dust haze, vast scale",
+    "student_ps": 22.46
+  },
+  {
+    "n": 41,
+    "theme": "surreal_and_dreamlike",
+    "prompt": "Upside-down ocean as the sky, lone silhouetted figure on misty shore, teal-orange dusk glow",
+    "student_ps": 22.73
+  },
+  {
+    "n": 42,
+    "theme": "surreal_and_dreamlike",
+    "prompt": "Giant pale moon looming over a quiet sleeping town, soft blue haze, single lit window aglow",
+    "student_ps": 22.85
+  },
+  {
+    "n": 43,
+    "theme": "surreal_and_dreamlike",
+    "prompt": "Impossible spiral staircase dissolving into clouds, lone wanderer silhouette, dreamy lavender twilight haze",
+    "student_ps": 20.9
+  },
+  {
+    "n": 44,
+    "theme": "surreal_and_dreamlike",
+    "prompt": "Colossal door standing alone in a desert of fog, blinding golden light spilling through",
+    "student_ps": 22.66
+  },
+  {
+    "n": 45,
+    "theme": "epic_wildlife",
+    "prompt": "Lone elephant herd marching through golden dust at sunset, backlit, volumetric haze, cinematic silhouette",
+    "student_ps": 22.34
+  },
+  {
+    "n": 46,
+    "theme": "epic_wildlife",
+    "prompt": "Lone wolf howling on a snowy peak under full moon, cold blue glow, bold silhouette",
+    "student_ps": 23.43
+  },
+  {
+    "n": 47,
+    "theme": "epic_wildlife",
+    "prompt": "A breaching whale against a fiery horizon, ocean spray glowing, dramatic golden backlight, epic scale",
+    "student_ps": 22.73
+  },
+  {
+    "n": 48,
+    "theme": "epic_wildlife",
+    "prompt": "Lion standing on a rock at golden hour, dust haze, warm backlight, dramatic cinematic silhouette",
+    "student_ps": 22.64
+  }
+]

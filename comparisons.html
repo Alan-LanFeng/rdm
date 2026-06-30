@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>1-step vs 4-step teacher · all 48 prompts · RDM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0B0D; --surface:#121419; --surface-2:#181B22; --line:#23262E; --line-2:#2E323C;
+  --text:#ECEDEF; --dim:#9AA0AB; --faint:#686E78; --amber:#FFB84D; --amber-glow:rgba(255,184,77,.16);
+  --mono:"Space Mono",ui-monospace,monospace; --disp:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;}
+::selection{background:var(--amber);color:#1a1304;}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:3px;}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(1.25rem,4vw,2.5rem);}
+.top{position:sticky;top:0;z-index:10;backdrop-filter:saturate(140%) blur(14px);background:color-mix(in srgb,var(--ink) 88%,transparent);border-bottom:1px solid var(--line);}
+.top-in{display:flex;align-items:center;justify-content:space-between;height:60px;max-width:1180px;margin:0 auto;padding-inline:clamp(1.25rem,4vw,2.5rem);}
+.brand{display:flex;align-items:baseline;gap:.6rem;}
+.brand b{font-family:var(--disp);font-weight:700;font-size:1.12rem;}
+.brand span{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;}
+.back{font-family:var(--mono);font-size:.78rem;color:var(--dim);padding:.5rem .7rem;border-radius:7px;border:1px solid var(--line-2);}
+.back:hover{color:var(--amber);border-color:var(--amber);}
+header.intro{padding:clamp(3rem,7vw,5rem) 0 1rem;}
+.eyebrow{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);}
+h1{font-family:var(--disp);font-weight:600;letter-spacing:-.025em;line-height:1.05;font-size:clamp(2rem,5vw,3.2rem);margin:.7rem 0 0;}
+.sub{color:var(--dim);max-width:64ch;margin:1.1rem 0 0;}
+.sub b{color:var(--text);font-weight:600;}
+h2.theme{font-family:var(--mono);font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);background:var(--amber-glow);display:inline-block;padding:.4rem .7rem;border-radius:7px;margin:clamp(2.5rem,5vw,4rem) 0 .5rem;}
+.vs{border-top:1px solid var(--line);padding:clamp(1.2rem,2.5vw,1.8rem) 0;}
+.vs-head{display:flex;align-items:baseline;gap:.9rem 1.1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.vs-prompt{flex:1;min-width:240px;color:var(--text);font-size:1rem;line-height:1.45;}
+.vs-ps{font-family:var(--mono);font-size:.76rem;color:var(--dim);white-space:nowrap;}
+.vs-ps b{color:var(--amber);font-weight:700;} .star{color:var(--amber);}
+.vs-imgs{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.55rem,1.4vw,1rem);}
+.vs-fig{margin:0;position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--surface);}
+.vs-fig img{width:100%;aspect-ratio:1;object-fit:cover;}
+.vs-fig figcaption{position:absolute;left:10px;top:10px;z-index:2;font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.3rem .52rem;border-radius:7px;backdrop-filter:blur(7px);}
+.vs-fig.teacher figcaption{color:var(--dim);background:color-mix(in srgb,var(--ink) 62%,transparent);border:1px solid var(--line-2);}
+.vs-fig.ours{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));}
+.vs-fig.ours figcaption{color:#1a1304;background:var(--amber);}
+.vs-fig.ours::after{content:"";position:absolute;inset:0;border-radius:14px;box-shadow:inset 0 0 0 1px var(--amber);pointer-events:none;}
+footer{border-top:1px solid var(--line);margin-top:4rem;padding:3rem 0;font-family:var(--mono);font-size:.74rem;color:var(--faint);}
+@media (max-width:560px){ .vs-fig figcaption{font-size:.56rem;left:7px;top:7px;padding:.25rem .42rem;} }
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <a class="brand" href="index.html"><b>RDM</b><span>one-step generation</span></a>
+  <a class="back" href="index.html">&larr; Back to project page</a>
+</div></div>
+
+<header class="intro"><div class="wrap">
+  <div class="eyebrow">Head to head · all 48 prompts</div>
+  <h1>Our one step vs the four-step teacher</h1>
+  <p class="sub">Left is the <b>four-step FLUX.2 [klein] teacher</b>, the distillation target. Right is <b>our one-step student</b>, a single forward pass. Same prompt per row, 48 prompts across 12 themes. The teacher averages a PickScore of <b>23.08</b>; a <span class="star">★</span> marks where our one step clears it.</p>
+</div></header>
+
+<main class="wrap">
+<h2 class="theme">Epic fantasy</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A lone dragon glides over jagged misty peaks at dawn, golden god rays piercing fog, vast silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>22.64</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-01.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-01.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A floating castle adrift in glowing cloudbanks, backlit by soft amber sunrise, sweeping cinematic vista</span>
+      <span class="vs-ps">our 1-step · PS <b>22.26</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-02.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-02.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A floating island fortress in violet storm clouds, lightning glow behind, single hero spire, vast moody atmosphere</span>
+      <span class="vs-ps">our 1-step · PS <b>22.39</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-03.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-03.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Golden-hour valley of waterfalls in mist, lone soaring eagle, warm volumetric light, cinematic wide vista</span>
+      <span class="vs-ps">our 1-step · PS <b>21.98</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-04.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-04.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Sci-fi worlds</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Colossal starship descending over neon megacity, glowing teal haze, lone tower silhouette, cinematic backlight</span>
+      <span class="vs-ps">our 1-step · PS <b>22.53</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-05.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-05.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Alien desert under twin suns, golden dust haze, lone wanderer silhouette, vast dunes, warm horizon glow</span>
+      <span class="vs-ps">our 1-step · PS <b>21.99</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-06.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-06.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Towering mech silhouette in rainy neon city, magenta and cyan glow, volumetric fog, moody cinematic backlight</span>
+      <span class="vs-ps">our 1-step · PS <b>24.26</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-07.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-07.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Floating crystal city above orange cloud sea, twin moons rising, golden god rays, lone airship silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>22.30</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-08.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-08.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Space &amp; cosmos</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lone astronaut silhouette drifting in vast violet nebula, glowing rim light, teal and magenta haze</span>
+      <span class="vs-ps">our 1-step · PS <b>23.37</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-09.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-09.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Giant ringed gas giant rising over barren moon horizon, golden backlight, lone figure for scale, wide vista</span>
+      <span class="vs-ps">our 1-step · PS <b>23.02</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-10.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-10.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Swirling crimson nebula with bright newborn star, volumetric glow, deep cosmic blacks, breathtaking scale</span>
+      <span class="vs-ps">our 1-step · PS <b>23.89</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-11.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-11.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Earthrise over lunar surface, glowing blue planet, stark black sky, single explorer silhouette, cinematic grandeur</span>
+      <span class="vs-ps">our 1-step · PS <b>23.23</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-12.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-12.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Underwater</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lone humpback whale gliding through golden god rays, deep blue haze, drifting silt, vast cinematic silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>21.12</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-13.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-13.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Glowing bioluminescent reef in teal darkness, electric blue and magenta haze, single radiant anemone hero</span>
+      <span class="vs-ps">our 1-step · PS <b>21.69</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-14.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-14.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Sunken temple ruin in blue-green haze, shafts of light through arches, lone diver silhouette for scale</span>
+      <span class="vs-ps">our 1-step · PS <b>21.82</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-15.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-15.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Giant manta ray soaring through turquoise god rays, glowing surface above, deep indigo abyss, epic scale</span>
+      <span class="vs-ps">our 1-step · PS <b>23.41</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-16.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-16.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Dramatic weather</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lightning storm over dark sea, single fishing boat silhouette, electric blue bolts splitting black clouds</span>
+      <span class="vs-ps">our 1-step · PS <b>22.43</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-17.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-17.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Massive tornado on golden plains at sunset, lone barn silhouette, swirling dust and amber backlight</span>
+      <span class="vs-ps">our 1-step · PS <b>21.16</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-18.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-18.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Volcanic eruption at night, glowing orange lava fountain, ash plume against black sky, distant ridge silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>21.95</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-19.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-19.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Giant rogue wave at dawn, glowing emerald crest, lone surfer silhouette, misty spray and golden backlight</span>
+      <span class="vs-ps">our 1-step · PS <b>21.11</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-20.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-20.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Epic hero shots</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lone warrior silhouette on a clifftop, vast golden sunset, glowing horizon, drifting haze, cinematic backlight</span>
+      <span class="vs-ps">our 1-step · PS <b>20.88</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-21.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-21.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Tiny figure at base of colossal waterfall, misty spray, soft god rays, teal depths, towering scale</span>
+      <span class="vs-ps">our 1-step · PS <b>22.23</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-22.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-22.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Knight standing in cathedral god rays, volumetric dust, golden shafts, deep shadow, glowing silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>23.20</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-23.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-23.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Samurai silhouette against a blood-red moon, drifting mist, bold backlight, moody crimson sky, cinematic</span>
+      <span class="vs-ps">our 1-step · PS <b>22.47</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-24.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-24.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Mythical creatures</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A blazing phoenix rising from glowing embers, fiery orange wings spread against dark smoldering sky</span>
+      <span class="vs-ps">our 1-step · PS <b>23.80</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-25.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-25.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A colossal silhouetted wolf in a raging snowstorm, glowing eyes, cold blue haze and swirling snow</span>
+      <span class="vs-ps">our 1-step · PS <b>22.67</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-26.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-26.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A massive sea serpent breaching at dusk, dark silhouette against glowing orange horizon, misty spray</span>
+      <span class="vs-ps">our 1-step · PS <b>23.04</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-27.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-27.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A radiant unicorn in an enchanted forest, soft volumetric light rays, glowing mist, magical teal glow</span>
+      <span class="vs-ps">our 1-step · PS <b>21.48</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-28.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-28.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Grand architecture</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Colossal jungle temple swallowed in dawn mist, god rays piercing green haze, lone silhouette on stone steps</span>
+      <span class="vs-ps">our 1-step · PS <b>22.09</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-29.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-29.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Ancient ruined colonnade under stormy sky, dramatic backlight, lightning silhouette, moody blue haze, vast scale</span>
+      <span class="vs-ps">our 1-step · PS <b>21.55</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-30.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-30.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Underground cathedral cavern, single shaft of light on ancient pillar, glowing dust, deep teal shadows</span>
+      <span class="vs-ps">our 1-step · PS <b>22.94</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-31.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-31.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Towering pyramid in sandstorm, sun glowing through haze, bold silhouette, warm amber atmosphere, epic vista</span>
+      <span class="vs-ps">our 1-step · PS <b>21.90</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-32.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-32.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Vehicles in motion</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lone red sports car drifting through neon rain, glowing tire smoke, wet reflections, cinematic teal-orange night</span>
+      <span class="vs-ps">our 1-step · PS <b>22.03</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-33.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-33.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Fighter jet bursting through golden clouds at dawn, vapor cone trailing, dramatic backlight, vast cinematic sky</span>
+      <span class="vs-ps">our 1-step · PS <b>21.93</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-34.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-34.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Steam train crossing misty stone viaduct, billowing smoke, volumetric god rays, moody blue valley fog</span>
+      <span class="vs-ps">our 1-step · PS <b>22.52</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-35.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-35.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Rally car airborne over muddy ridge, dirt spray exploding, low golden sun, dramatic silhouette, dust haze</span>
+      <span class="vs-ps">our 1-step · PS <b>22.45</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-36.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-36.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Cinematic crowds</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Foggy night market, glowing stall lanterns, one cloaked vendor silhouette, warm amber haze, bokeh glow</span>
+      <span class="vs-ps">our 1-step · PS <b>22.53</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-37.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-37.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Rain-soaked crowd under neon, one lone figure with umbrella, teal-magenta glow, wet reflections, motion blur</span>
+      <span class="vs-ps">our 1-step · PS <b>22.53</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-38.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-38.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lantern festival at dusk, glowing orbs rising, single child silhouette, golden haze, soft bokeh, dreamy cinematic</span>
+      <span class="vs-ps">our 1-step · PS <b>21.47</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-39.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-39.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Bustling train station at dawn, god rays through glass roof, one traveler silhouette, golden dust haze, vast scale</span>
+      <span class="vs-ps">our 1-step · PS <b>22.46</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-40.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-40.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Surreal &amp; dreamlike</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Upside-down ocean as the sky, lone silhouetted figure on misty shore, teal-orange dusk glow</span>
+      <span class="vs-ps">our 1-step · PS <b>22.73</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-41.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-41.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Giant pale moon looming over a quiet sleeping town, soft blue haze, single lit window aglow</span>
+      <span class="vs-ps">our 1-step · PS <b>22.85</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-42.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-42.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Impossible spiral staircase dissolving into clouds, lone wanderer silhouette, dreamy lavender twilight haze</span>
+      <span class="vs-ps">our 1-step · PS <b>20.90</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-43.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-43.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Colossal door standing alone in a desert of fog, blinding golden light spilling through</span>
+      <span class="vs-ps">our 1-step · PS <b>22.66</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-44.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-44.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+<h2 class="theme">Epic wildlife</h2>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lone elephant herd marching through golden dust at sunset, backlit, volumetric haze, cinematic silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>22.34</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-45.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-45.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lone wolf howling on a snowy peak under full moon, cold blue glow, bold silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>23.43</b> <span class="star">★</span></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-46.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-46.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">A breaching whale against a fiery horizon, ocean spray glowing, dramatic golden backlight, epic scale</span>
+      <span class="vs-ps">our 1-step · PS <b>22.73</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-47.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-47.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+  <article class="vs">
+    <div class="vs-head">
+      <span class="vs-prompt">Lion standing on a rock at golden hour, dust haze, warm backlight, dramatic cinematic silhouette</span>
+      <span class="vs-ps">our 1-step · PS <b>22.64</b></span>
+    </div>
+    <div class="vs-imgs">
+      <figure class="vs-fig teacher"><img src="assets/cmp/teacher-48.jpg" loading="lazy" width="512" height="512" alt="4-step teacher"><figcaption>4-step · teacher</figcaption></figure>
+      <figure class="vs-fig ours"><img src="assets/cmp/student-48.jpg" loading="lazy" width="512" height="512" alt="our 1-step"><figcaption>1-step · ours</figcaption></figure>
+    </div>
+  </article>
+</main>
+
+<footer><div class="wrap">RDM · Representation Distribution Matching for One-Step Visual Generation · FLUX.2 [klein] post-training</div></footer>
+</body>
+</html>

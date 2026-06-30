@@ -11,20 +11,15 @@ python3 -m http.server 8731
 # open http://localhost:8731
 ```
 
-## Before publishing, fill in these placeholders
+## Links
 
-All currently point to `#` and show a "link coming soon" hint when clicked.
-Search `index.html` for `data-link` and replace the four `href="#"` values:
-
-- `data-link="paper"`  → the paper PDF / OpenReview URL
-- `data-link="arxiv"`  → the arXiv abstract URL
-- `data-link="code"`   → the code repository URL
-
-Other things you may want to edit:
-- **Venue tag** "ICLR 2026" appears in the hero eyebrow and the footer. Change if the
-  status is "Under review" or a preprint.
-- **BibTeX** key `feng2026rdm` and the `booktitle` in the citation block.
-- **Open Graph image** `<meta property="og:image">` in `<head>` (currently `assets/samples/sample-12.jpg`).
+- **Paper** buttons (nav, hero, footer) point to the hosted `RDM.pdf`. To update the paper,
+  replace `website/RDM.pdf` and push.
+- **arXiv** and **Code** are still placeholders: they point to `#` and show a "link coming soon"
+  hint when clicked. Search `index.html` for `data-link` and set the real `href` when available.
+- **BibTeX** is a `@misc` preprint entry (key `feng2026rdm`); switch to `@inproceedings` + a
+  `booktitle` once there's a venue.
+- **Open Graph image** is `<meta property="og:image">` in `<head>` (currently `assets/samples/sample-12.jpg`).
 
 ## Assets
 
@@ -47,10 +42,22 @@ The two sample sets are independent: the top marquee and bottom gallery read fro
 folders, so you can swap either without touching the other (`var samples` vs `var galSamples`
 in the inline script).
 
-## Deploy
+## Deployment
 
-Any static host works. For GitHub Pages, push the contents of `website/` to a `gh-pages`
-branch (or set Pages to serve `/website`). The page is fully static and needs no server.
+Live at **https://alan-lanfeng.github.io/rdm/**, served by GitHub Pages from the `main`
+branch root of **github.com/Alan-LanFeng/rdm** (`.nojekyll` bypasses Jekyll). This folder is
+the repo root.
+
+To update the live site after editing any file here:
+
+```bash
+cd website
+git add -A
+git commit -m "Update site"
+git push
+```
+
+Pages rebuilds in ~1 minute.
 
 ## Design notes
 

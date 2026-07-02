@@ -396,6 +396,26 @@ h2.section-title .accent{ color:var(--amber); }
 }
 .gal a:hover::after{ opacity:1; transform:translateY(0); }
 
+/* ============================================================ LIVE DEMO */
+.demo-frame{ margin-top:1rem; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:var(--ink-2); box-shadow:0 30px 80px -40px rgba(0,0,0,.8); }
+.demo-bar{ display:flex; align-items:center; gap:.5rem; padding:.7rem 1rem; border-bottom:1px solid var(--line); background:var(--surface); }
+.demo-dot{ width:10px; height:10px; border-radius:50%; background:var(--line-2); flex:none; }
+.demo-title{ font-family:var(--mono); font-size:.76rem; color:var(--dim); margin-left:.55rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.demo-ext{ margin-left:auto; font-family:var(--mono); font-size:.74rem; color:var(--amber); white-space:nowrap; }
+.demo-ext:hover{ text-decoration:underline; }
+.demo-stage{ position:relative; width:100%; height:clamp(560px, 82vh, 820px); background:var(--ink); }
+.demo-stage.loaded{ height:clamp(640px, 90vh, 940px); }
+.demo-poster{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.26; }
+.demo-launch{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.7rem; padding:1rem;
+  background:radial-gradient(58% 58% at 50% 44%, rgba(10,11,13,.30), rgba(10,11,13,.86)); border:0; cursor:pointer; color:var(--text); width:100%; text-align:center; }
+.demo-play{ width:66px; height:66px; border-radius:50%; background:var(--amber); color:#1a1304; display:flex; align-items:center; justify-content:center; font-size:1.5rem; padding-left:5px; box-shadow:0 0 44px var(--amber-glow); transition:transform .2s; }
+.demo-launch:hover .demo-play, .demo-launch:focus-visible .demo-play{ transform:scale(1.09); }
+.demo-launch-t{ font-family:var(--disp); font-weight:600; font-size:clamp(1.1rem,2.2vw,1.3rem); }
+.demo-launch-s{ font-family:var(--mono); font-size:.74rem; color:var(--dim); max-width:36ch; }
+.demo-iframe{ width:100%; height:100%; border:0; display:block; background:var(--ink); }
+.demo-note{ font-family:var(--mono); font-size:.72rem; color:var(--faint); margin:1rem 0 0; line-height:1.6; }
+@media (max-width:640px){ .demo-stage{ height:clamp(500px,78vh,660px); } .demo-title{ display:none; } }
+
 /* ============================================================ CITATION */
 .cite-wrap{ margin-top:1rem; }
 .codeblock{
@@ -448,6 +468,7 @@ h2.section-title .accent{ color:var(--amber); }
       <a href="#method" class="hide-sm">Method</a>
       <a href="#teacher" class="hide-sm">vs 4-step</a>
       <a href="#gallery" class="hide-sm">Samples</a>
+      <a href="#demo" class="hide-sm">Demo</a>
       <a href="#cite" class="hide-sm">BibTeX</a>
       <a href="RDM.pdf" class="cta" target="_blank" rel="noopener">Paper</a>
     </nav>
@@ -968,6 +989,37 @@ h2.section-title .accent{ color:var(--amber); }
   </div>
 </section>
 
+<!-- ===================================================== LIVE DEMO -->
+<section class="section" id="demo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Live demo</div>
+      <h2 class="section-title">Generate in one step, yourself<span class="accent">.</span></h2>
+      <p class="lede">
+        The post-trained one-step FLUX.2 [klein] runs live on HuggingFace Spaces. Type a prompt and
+        get an image in a single forward pass.
+      </p>
+    </div>
+
+    <div class="demo-frame reveal">
+      <div class="demo-bar">
+        <span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span>
+        <span class="demo-title">FLUX.2-klein · 1-step RDM</span>
+        <a class="demo-ext" href="https://huggingface.co/spaces/epfl-vita/flux2-klein-1step-demo" target="_blank" rel="noopener">Open in HuggingFace ↗</a>
+      </div>
+      <div class="demo-stage" id="demoStage" data-src="https://epfl-vita-flux2-klein-1step-demo.hf.space/?__theme=dark">
+        <img class="demo-poster" src="assets/samples/sample-01.jpg" alt="" aria-hidden="true" loading="lazy"/>
+        <button class="demo-launch" id="demoLaunch" type="button" aria-label="Launch the live one-step demo">
+          <span class="demo-play" aria-hidden="true">▶</span>
+          <span class="demo-launch-t">Launch the live demo</span>
+          <span class="demo-launch-s">Runs on HuggingFace Spaces · a moment to wake if it has been idle</span>
+        </button>
+      </div>
+    </div>
+    <p class="demo-note">Embedded from the public Space. If it does not load here, open it in a new tab with the link above.</p>
+  </div>
+</section>
+
 <!-- ===================================================== CITATION -->
 <section class="section" id="cite">
   <div class="wrap">
@@ -1115,6 +1167,24 @@ h2.section-title .accent{ color:var(--amber); }
       }
     });
   });
+
+  /* live demo: click-to-load the HuggingFace Space iframe (keeps page load light) */
+  var demoLaunch = document.getElementById("demoLaunch");
+  if (demoLaunch){
+    demoLaunch.addEventListener("click", function(){
+      var stage = document.getElementById("demoStage");
+      var src = stage.getAttribute("data-src");
+      var f = document.createElement("iframe");
+      f.className = "demo-iframe";
+      f.src = src;
+      f.title = "FLUX.2-klein one-step live demo";
+      f.setAttribute("allow", "clipboard-write; fullscreen");
+      f.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
+      stage.innerHTML = "";
+      stage.appendChild(f);
+      stage.classList.add("loaded");
+    });
+  }
 })();
 </script>
 </body>

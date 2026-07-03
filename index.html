@@ -172,6 +172,8 @@ h2.section-title .accent{ color:var(--amber); }
 .authors{ margin:2.2rem 0 0; font-size:.96rem; color:var(--text); }
 .authors .names{ font-weight:500; }
 .authors .names .me{ color:var(--amber); }
+.authors .names a.me{ text-decoration:none; transition:text-decoration-color .2s; }
+.authors .names a.me:hover{ text-decoration:underline; text-underline-offset:3px; }
 .affil{ margin-top:.55rem; display:flex; flex-wrap:wrap; gap:.5rem .9rem; font-family:var(--mono); font-size:.72rem; color:var(--faint); letter-spacing:.02em; }
 .affil sup{ color:var(--amber); }
 
@@ -531,7 +533,7 @@ h2.section-title .accent{ color:var(--amber); }
 
     <div class="authors">
       <div class="names">
-        <span class="me">Lan Feng</span><sup>1</sup>, &nbsp;Wuyang Li<sup>1</sup>, &nbsp;Éloi Zablocki<sup>2</sup>, &nbsp;Matthieu Cord<sup>2,3</sup>, &nbsp;Alexandre Alahi<sup>1</sup>
+        <a class="me" href="https://alan-lanfeng.github.io/" target="_blank" rel="noopener">Lan Feng</a><sup>1</sup>, &nbsp;Wuyang Li<sup>1</sup>, &nbsp;Éloi Zablocki<sup>2</sup>, &nbsp;Matthieu Cord<sup>2,3</sup>, &nbsp;Alexandre Alahi<sup>1</sup>
       </div>
       <div class="affil">
         <span><sup>1</sup> EPFL</span>
